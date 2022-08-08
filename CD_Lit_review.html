@@ -134,7 +134,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   
   <meta name="citation_reference" content="citation_title=Modelling misclassification in multi‐species acoustic data when estimating occupancy and relative activity;citation_publication_date=2020;citation_publisher=Wiley;citation_volume=11;citation_issn=2041-210X;citation_author=Wilson J. Wright;citation_author=Kathryn M. Irvine;citation_author=Emily S. Almberg;citation_author=Andrea R. Litt;citation_author=Nigel Yoccoz"/>
   <meta name="citation_reference" content="citation_title=Estimating species misclassification with occupancy dynamics and encounter rates: A semi-supervised, individual-level approach;citation_publication_date=2022;citation_volume=13;citation_doi=https://doi.org/10.1111/2041-210X.13858;citation_author=Anna I. Spiers;citation_author=J. Andrew Royle;citation_author=Christa L. Torrens;citation_author=Maxwell B. Joseph"/>
-  <meta name="citation_reference" content="citation_title=Estimating occupancy from autonomous recording unit data in the presence of misclassifications and detection heterogeneity;citation_volume=n/a;citation_doi=https://doi.org/10.1111/2041-210X.13895;citation_author=Matthew J. Clement;citation_author=J. Andrew Royle;citation_author=Ronald J. Mixan"/>
+  <meta name="citation_reference" content="citation_title=Estimating occupancy from autonomous recording unit data in the presence of misclassifications and detection heterogeneity;citation_publication_date=2022;citation_volume=n/a;citation_doi=https://doi.org/10.1111/2041-210X.13895;citation_author=Matthew J. Clement;citation_author=J. Andrew Royle;citation_author=Ronald J. Mixan"/>
   <meta name="citation_reference" content="citation_title=Statistical assessment on determining local presence of rare bat species;citation_publication_date=2022;citation_volume=13;citation_doi=https://doi.org/10.1002/ecs2.4142;citation_author=Kathryn M. Irvine;citation_author=Katharine M. Banner;citation_author=Christian Stratton;citation_author=William M. Ford;citation_author=Brian E. Reichert"/>
   <meta name="citation_reference" content="citation_title=Coupling validation effort with in situ bioacoustic data improves estimating relative activity and occupancy for multiple species with cross-species misclassifications;citation_publication_date=2022;citation_volume=13;citation_doi=https://doi.org/10.1111/2041-210X.13831;citation_author=Christian Stratton;citation_author=Kathryn M. Irvine;citation_author=Katharine M. Banner;citation_author=Wilson J. Wright;citation_author=Cori Lausen;citation_author=Jason Rae"/>
   <meta name="citation_reference" content="citation_title=Accounting for misclassification in multispecies distribution models;citation_publication_date=2022;citation_publisher=arXiv;citation_doi=10.48550/ARXIV.2204.03708;citation_author=Kwaku Peprah Adjei;citation_author=Robert Bob O’Hara;citation_author=Anders G. Finstad;citation_author=Wouter Koch"/>
@@ -1620,13 +1620,11 @@ are ambiguous counts because they may contain calls that truly came from
 any of the <span class="math inline">\(k\)</span> species.</li>
 </ul>
 <p>The model is written as <span class="math display">\[
-\begin{split}
 Z_{ik} \sim Bernoulli(\psi_{ik}) \\
 [Y_{ijk} | Z_{ik} = 1] \sim Poisson(\lambda_{ijk})\\
 [\boldsymbol{C}_{ijk}| Z_{ik} = 1, Y_{ijk} = y_{ijk}] \sim
 Multinomial(y_{ijk}, \Theta)\\
 C_{ij.k&#39;} = \sum_{k = 1}^K{C_{ijkk&#39;}}
-\end{split}
 \]</span></p>
 <h2 id="section-1">2022</h2>
 <h3
@@ -1775,9 +1773,9 @@ each with 30 sites and 3 visits.</li>
 <h3
 id="clement22-estimating-occupancy-from-autonomous-recording-unit-data-in-the-presence-of-misclassifications-and-detection-heterogeneity"><span
 class="citation" data-cites="clement22">(<a href="#ref-clement22"
-role="doc-biblioref">Clement, Royle and Mixan</a>)</span> Estimating
-occupancy from autonomous recording unit data in the presence of
-misclassifications and detection heterogeneity</h3>
+role="doc-biblioref">Clement, Royle and Mixan, 2022</a>)</span>
+Estimating occupancy from autonomous recording unit data in the presence
+of misclassifications and detection heterogeneity</h3>
 <h4 id="summary-2">Summary</h4>
 <p>The authors propose a two-species false-positive N-mixture model that
 they claim accounts for misclassification and abundance-induced
@@ -1827,44 +1825,22 @@ c_{ij}^B \sim Poisson(N_i^B\lambda^B + N_i^A\omega^A)
 \]</span></p>
 <h4 id="notes-1">Notes</h4>
 <ul>
-<li><p>The authors make a number of assumptions that allow for the
-N-mixture model:</p>
-<ul>
-<li>Classification algorithms do better than random classification (and
-so sites with many detections classified to a given species are more
-likely to be true positives).</li>
-<li>False-positive detections of focal species are more likely where
-many calls from other species are observed.</li>
-<li>Expect to record more detections where a species is abundant.</li>
-</ul></li>
-<li><p>The authors claim that the count detection model of <span
-class="citation" data-cites="wright20">Wright et al. (<a
-href="#ref-wright20" role="doc-biblioref">2020</a>)</span> assumes a
-constant encounter rate (and therefore detection probability) across
-sites. Although the original model formulation by <span class="citation"
-data-cites="wright20">Wright et al. (<a href="#ref-wright20"
-role="doc-biblioref">2020</a>)</span> allows <span
-class="math inline">\(\lambda_k\)</span> to vary by site and visit, in
-previous simulation studies (including the original paper that
-introduced the count detection model) the encounter rate per species was
-held constant since no covariates were included at the site or visit
-level.</p></li>
 <li><p>The parameter <span class="math inline">\(\lambda^A\)</span> used
-by <span class="citation" data-cites="clement22">Clement et al.</span>
-has two key differences with <span
-class="math inline">\(\lambda_{A_w}\)</span> (where the extra <span
-class="math inline">\(w\)</span> subscript indicates that this parameter
-is in the notation of <span class="citation"
-data-cites="wright20">Wright et al. (<a href="#ref-wright20"
-role="doc-biblioref">2020</a>)</span>):</p>
-<ol type="1">
+by <span class="citation" data-cites="clement22">Clement et al. (<a
+href="#ref-clement22" role="doc-biblioref">2022</a>)</span> has two key
+differences with <span class="math inline">\(\lambda_{A_w}\)</span>
+(where the extra <span class="math inline">\(w\)</span> subscript
+indicates that this parameter is in the notation of <span
+class="citation" data-cites="wright20">Wright et al. (<a
+href="#ref-wright20" role="doc-biblioref">2020</a>)</span>):</p>
+<ul>
 <li><span class="math inline">\(\lambda^A\)</span> indicates the
 individual level encounter rate (i.e., the expected number of calls from
 an individual of species A)</li>
 <li><span class="math inline">\(\lambda^A\)</span> represents
 true-positive detections, so tha <span class="math inline">\(N_A
 \lambda^A = \lambda_{A_w} * \theta_AA.\)</span></li>
-</ol></li>
+</ul></li>
 <li><p>The above observations also highlights the additional information
 afforded by the count detection model: it characterizes the classifier
 separately from the ecological parameters. (Edit: We can obtain the
@@ -2105,7 +2081,7 @@ href="https://doi.org/10.48550/ARXIV.2204.03708">Accounting for
 misclassification in multispecies distribution models</a>.
 </div>
 <div id="ref-clement22" class="csl-entry" role="doc-biblioentry">
-Clement, M.J., Royle, J.A. and Mixan, R.J. <a
+Clement, M.J., Royle, J.A. and Mixan, R.J. (2022) <a
 href="https://doi.org/10.1111/2041-210X.13895">Estimating occupancy from
 autonomous recording unit data in the presence of misclassifications and
 detection heterogeneity</a>. <em>Methods in Ecology and Evolution</em>,

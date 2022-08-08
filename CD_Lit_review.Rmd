@@ -16,7 +16,7 @@ bibliography: LR_reference.bib
 csl: biometrics_notes.csl
 ---
 
-```{r setup, include = F}
+```{r setup, include = FALSE}
 rm(list = ls())
 
 library(knitr)
@@ -81,12 +81,10 @@ Let $i = 1, 2, \dots, n$ denote site, $j = 1, 2, \dots, J$ denote visit, and $k 
 
 The model is written as 
 \[
-\begin{split}
 Z_{ik} \sim Bernoulli(\psi_{ik}) \\
 [Y_{ijk} | Z_{ik} = 1] \sim Poisson(\lambda_{ijk})\\
 [\boldsymbol{C}_{ijk}| Z_{ik} = 1, Y_{ijk} = y_{ijk}] \sim Multinomial(y_{ijk}, \Theta)\\
 C_{ij.k'} = \sum_{k = 1}^K{C_{ijkk'}}
-\end{split}
 \]
 
 ## 2022
@@ -186,6 +184,7 @@ full_df %>%
   xlim(0, 5)+
   theme(axis.text.x = element_text(angle = 90))
 ```
+
   * Clearly these stochastic data-generating values are not distributed throughout the parameter space, and so the authors' simulation results may need to be taken with some caution
   
 * Focus in simulation study was on predictive performance, rather than inference of ecological parameters. 
@@ -196,6 +195,7 @@ full_df %>%
 That is, the estimated species identities are selected as the species that the median from the categorical posterior distribution (see Observation model: classification) lies on for each of the 1,200 chains for each iteration of every dataset.  
 
 * The authors used $K=2$ species and $\tilde{K} = 3$ species designations, including one morphospecies. There were 15000 datasets, each with 30 sites and 3 visits. 
+
 
 ### [@clement22] Estimating occupancy from autonomous recording unit data in the presence of misclassifications and detection heterogeneity
 
@@ -226,16 +226,9 @@ c_{ij}^B \sim Poisson(N_i^B\lambda^B + N_i^A\omega^A)
 
 #### Notes 
 
-* The authors make a number of assumptions that allow for the N-mixture model: 
-  * Classification algorithms do better than random classification (and so sites with many detections classified to a given species are more likely to be true positives). 
-  * False-positive detections of focal species are more likely where many calls from other species are observed. 
-  * Expect to record more detections where a species is abundant. 
-  
-* The authors claim that the count detection model of @wright20 assumes a constant encounter rate (and therefore detection probability) across sites. Although the original model formulation by @wright20 allows $\lambda_k$ to vary by site and visit, in previous simulation studies (including the original paper that introduced the count detection model) the encounter rate per species was held constant since no covariates were included at the site or visit level. 
-
 * The parameter $\lambda^A$ used by @clement22 has two key differences with $\lambda_{A_w}$ (where the extra $w$ subscript indicates that this parameter is in the notation of @wright20): 
-  1) $\lambda^A$ indicates the individual level encounter rate (i.e., the expected number of calls from an individual of species A)
-  2) $\lambda^A$ represents true-positive detections, so tha $N_A \lambda^A = \lambda_{A_w} * \theta_AA.$
+  * $\lambda^A$ indicates the individual level encounter rate (i.e., the expected number of calls from an individual of species A)
+  * $\lambda^A$ represents true-positive detections, so tha $N_A \lambda^A = \lambda_{A_w} * \theta_AA.$
 
 * The above observations also highlights the additional information afforded by the count detection model: it characterizes the classifier separately from the ecological parameters. (Edit: We can obtain the classification parameters $\theta$ through combinations of $\lambda$ and $\omega$ terms.)
 
@@ -351,7 +344,3 @@ Finally, the true species is predicted as
 \[
 \Gamma_{iks} = \frac{\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}}{\sum_{s} \left[\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}\right]}
 \]
-
-
-
-
