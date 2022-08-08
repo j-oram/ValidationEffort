@@ -6,7 +6,6 @@ author:
   - name: Jacob Oram
     affiliation: Montana State University 
     affiliation_url: https://math.montana.edu/
-
 date: '`r Sys.Date()`'
 output: 
   distill::distill_article:
@@ -45,7 +44,7 @@ knitr::opts_chunk$set(
 
 
 # packages
-packs <- c("dplyr", "nimble", "htmltools", "ggplot2", "sf", "Rcpp", "RcppArmadillo", "inline", "mvtnorm", "readr", "parallel", "xtable", "rstan", "coda", "vegan", "tidyr", "gganimate", "stringr", "scatterplot3d", "plot3D", "plotly", "tidyverse", "ggalluvial", "lubridate", "ggnewscale", "MASS", "arm")
+packs <- c("dplyr", "nimble", "htmltools", "ggplot2", "sf", "Rcpp", "RcppArmadillo", "inline", "mvtnorm", "readr", "parallel", "xtable", "rstan", "coda", "vegan", "tidyr", "stringr", "scatterplot3d", "plotly", "tidyverse", "ggalluvial", "lubridate", "MASS", "arm")
 sapply(packs, require, character.only = T)
 rm(packs)
 options(tidyverse.quiet = TRUE)
@@ -57,21 +56,6 @@ options(tidyverse.quiet = TRUE)
 options(mc.cores = parallel::detectCores() - 1)
 rstan_options(auto_write = TRUE)
 ```
-
-# Goals 
-
-- Synthesis: What is the discourse that is  happening/ that has happened to date? 
-
-- How does this research fit in with other sources? What gap does it fill? 
-
-- Why do we care? (Want to ["argue for your place in the conversation"](https://owl.purdue.edu/owl/research_and_citation/conducting_research/writing_a_literature_review.html))
-
-
-# Research question 
-
-To adequately characterize the relative activity ($\lambda$) and prevalence ($\psi$) of each species in an assemblage, how many calls must be manually vetted from each in the presence of misclassification? 
-
-We also want to argue that inclusion of expert knowledge in this situation (e.g., we know a lot about bats in North America, such as which species are likely to be where and how prevalent or active they tend to be) is appropriate and desireable. 
 
 # Annotated Bibliography 
 
@@ -360,9 +344,10 @@ Additionally, the rectangular confusion matrix is familiar, a la @spiers22
 
 * This may not be the most useful model in the context of bat applications because it requires detection of individuals at random locations, rather than detection and classification at fixed points (i.e., where the detector gets deployed).  
 
-* Unclear whether we must have verified true state for all locations/observations or just a subset. 
+* Unclear whether we must have verified true state for all locations/observations or just a subset.
 
 Finally, the true species is predicted as 
+
 \[
 \Gamma_{iks} = \frac{\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}}{\sum_{s} \left[\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}\right]}
 \]
