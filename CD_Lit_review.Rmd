@@ -321,7 +321,7 @@ Then, the realized true states are categorically distributed:
 $$V_i \sim Categorical(p_{is})$$
 
 The previous distributions describe the true latent state. 
-To model the classification process, the authors define a rectangular ($S \times K$ confusion matrix $\boldsymbol{\Omega}$ that allows for $S$ true species labels and $K$ identifications, including  categories such as "unidentified woodpecker." 
+To model the classification process, the authors define a rectangular ($S \times K$) confusion matrix $\boldsymbol{\Omega}$ that allows for $S$ true species labels and $K$ identifications, including  categories such as "unidentified woodpecker." 
 Conditional $\Omega$ and the verified (true) species $V_i,$ the assigned species label is given by 
 $$Y_i|V_i = v \sim Categorical(\boldsymbol{\Omega}_v).$$
 
@@ -344,3 +344,56 @@ Finally, the true species is predicted as
 \[
 \Gamma_{iks} = \frac{\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}}{\sum_{s} \left[\omega_{sk} \frac{\hat{\lambda_{is}}}{\sum_{s}\hat{\lambda_{is}}}\right]}
 \]
+
+### [@rhinehart22] A continuous-score occupancy model that incorporates uncertain machine learning output from autonomous biodiversity surveys
+
+#### Summary 
+
+The authors reframe the question of modeling ARU data in terms of the continuous scores that are output from ML algorithms. 
+Under their new model, instead of a 'visit' as used in the occupancy modeling framework, a survey of a site is a recording file, which is given a continuous score and modeled based on a Guassian mixture of recording scores that do and do not contain the focal species. 
+
+#### Model specification 
+
+Let $i$ index site, and let $f_{i,k_i}$ be a single recording from site $i.$ 
+Further, let $k_i = 1,2,\dots,K_i$ denote the call file number; there are $K_i$ total files recorded at site $i.$ 
+Next, let 
+
+* $Z_i$ be the partially observed occupancy state of site $i$
+* $\psi$ denote the probability of occupancy by the focal species. For simplicity this is assumed constant across sites. 
+* $f_{i,k_i}$ denote the binary random variable that takes on value 1 when the focal species is present in the recording and 0 otherwise. 
+* $s_{i,k_i}$ be the score of the $k_i$th recording from site $i.$ 
+* $\theta$ denote the 'appearance rate' for the focal species. See notes. 
+* $\mu$ be the mean classifier scores
+* $\sigma^2$ denote the variance of the classifier scores
+
+\[
+Z_i \sim Bernoulli(\psi)\\
+f_{i,k_i} \sim Bernoulli(z_i \theta)\\
+[s_{i,{k_i}} | f_{i,{k_i}} = 0] \sim N(\mu_0, \sigma^2_0) \\
+[s_{i,k_i}| f_{i,k_i} = 1] \sim N(\mu_1, \sigma^2_1)
+\]
+
+To extend the model by including random subset of validated recordings let 
+* $h_{i,k_i}$ denote the confirmation status of the $k_i$th file. 
+  * $h_{i,k_i}= 0$ if file does not contain the focal species
+  * $h_{i,k_i} = 1$ if file does contain the focal species
+  * $h_{i,k_i} = 2$ if the file is not manually reviewed
+* $\pi_{i,k_i}$ denote the probability of observing score $s_{i,k_i}.$ See Table 1 in the authors' original paper for the form of $\pi,$ which changes depending on the combination of confirmation status and partially observed occupancy state. The full likelihood may be written as 
+
+\[
+L(\psi, \theta, \boldsymbol{\mu}, \boldsymbol{\sigma}| \boldsymbol{S, \space H}) = 
+\prod_{i} \left[ 
+(1 - \psi) \prod_{k_i = 1}^{K_i} \pi_i(s_{i,k_i} | z_i = 0, h_{i,k_i}) + 
+\psi \prod_{k_i = 1}^{K_i} \pi_i(s_{i,k_i} | z_i = 1, h_{i,k_i})
+\right].
+\]
+
+
+#### Notes 
+
+* The authors note that $\theta$ can be thought of as encoding all of the factors that lead to the presence of a species in a call file; this includes the species calling rate and also its availability for successful recording. 
+  * Within a site, $\theta$ is also the weight assigned to the species-present component of the mixture. 
+  * Across sites, the weight assigned to the species-present component of the mixture changes to $\theta\psi$ 
+
+* without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability
+* The authors only ran 1 chain all MCMC
