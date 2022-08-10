@@ -1,7 +1,7 @@
 ---
 title: "Modeling false-positive detections through a count-detection framework: literature review"
 description: |
-  A review of false positive occupancy modeling after 2020
+  A review of false positive occupancy modeling (mostly) after 2020
 author: 
   - name: Jacob Oram
     affiliation: Montana State University 
@@ -59,6 +59,37 @@ rstan_options(auto_write = TRUE)
 
 # Annotated Bibliography 
 
+## 2018 
+
+### [@chambert18] A new framework for analysing automated acoustic species detection data: Occupancy estimation and optimization of recordings post-processing
+
+#### Summary 
+
+The authors propose a new model that models partially-observed occupancy state with information from both binary and count detections; a subset of automatically labeled recordings are manually vetted and modeled using a hypergeometric distribution. 
+The authors demonstrate this model's properties through simulation and compare the full model against two reduced models that use either solely binary detection information or solely count detection information. 
+
+
+#### Model specification 
+
+\[
+z_i \sim Bernoulli(\psi_i)\\
+[y_{ij}|z_i] \sim Bernoulli(p_i)\\
+p_i = z_ip_{11} + (1-z_i)p_{10}\\
+\]
+
+For sites with at least one detection:
+
+\[
+N_i \sim Poisson(\lambda * z_i + \omega)\\
+K_i \sim Poisson(\lambda z_i)\\
+Q_i = N_i - K_i\\
+k_i \sim Hypergeometric(K_i, N_i, n_i)
+\]
+
+#### Notes 
+
+
+
 ## 2020
 
 ### [@wright20] Modelling misclassification in multi‐species acoustic data when estimating occupancy and relative activity
@@ -67,7 +98,7 @@ rstan_options(auto_write = TRUE)
 
 Motivated by bat surveys that employ autonomous recording units (ARUs), the authors introduce a model capable of analyzing counts from multiple species simultaneously while accounting for false-positive detections that arise as a result of species misclassification. This approach expands on previously developed false-positive models; the authors use simulation to characterize model performance and to compare the performance of their model to these existing models, all of which use simplifying assumptions for analysis (e.g., counts summed to binary or data only from a single focal species). The authors then apply to count-detection model to bat ARU data from the Montana Natural Heritage Program.  
 
-#### Model Formulation 
+#### Model specification
 
 Let $i = 1, 2, \dots, n$ denote site, $j = 1, 2, \dots, J$ denote visit, and $k = 1, 2, \dots, K$ denote species. Then, let 
 
@@ -205,7 +236,7 @@ The authors propose a two-species false-positive N-mixture model that they claim
 The model does not require manual verification of any recorded detections to estimate occupancy and incorporates abundance as a latent variable in both the state and detection components of the model.
 The authors simulated data under the N-mixture model with a variety of scenarios for $\mu,$ $r,$ $\lambda$ and $\omega$ parameters. The authors  then compared the performance of a) a reduced presence/absence model, b) the count detection model, and c) the N-mixture model. Simulations resulted in excellent performance (e.g., convergence, bias, RMSE, coverage) for the N-mixture model and low convergence with some bias for the count detection model. After simulations, the authors applied the model to MYCI and MYYU bat data from two sites in Colorado, finding the N-mixture model to produce more plausible estimates than either competitor model. 
 
-#### Model Specification 
+#### Model specification 
 
 Let $i = 1,2,\dots, R$ index site, and let $j = 1,2,\dots, T$ index visit. Furthermore, let 
 
@@ -349,8 +380,11 @@ Finally, the true species is predicted as
 
 #### Summary 
 
-The authors reframe the question of modeling ARU data in terms of the continuous scores that are output from ML algorithms. 
-Under their new model, instead of a 'visit' as used in the occupancy modeling framework, a survey of a site is a recording file, which is given a continuous score and modeled based on a Guassian mixture of recording scores that do and do not contain the focal species. 
+The authors reframe the question of modeling ARU data in terms of the continuous scores that are output from ML algorithms for each call file; these continuous scores are modeled as a Gaussian mixture, where one component models files that contain the focal species, and the other models files that do not.
+The authors demonstrate their model's performance by simulation and make comparisons with a naïve  single-season single-species occupancy model. 
+The authors find that if the difference in true means of the Gaussian distributions are less than 0.1, the model fails. 
+Once these simulations were removed, model performance was excellent with less bias and greater precision than the naïve model. 
+The authors also validate their model's use empirically, and investigate the effect of annotation (call file confirmation), finding that when training data for the classifier contained a representative sample of species' calls the gaussian mixture was able to adequately estimate occupancy under most validation scenarios. 
 
 #### Model specification 
 
@@ -395,5 +429,4 @@ L(\psi, \theta, \boldsymbol{\mu}, \boldsymbol{\sigma}| \boldsymbol{S, \space H})
   * Within a site, $\theta$ is also the weight assigned to the species-present component of the mixture. 
   * Across sites, the weight assigned to the species-present component of the mixture changes to $\theta\psi$ 
 
-* without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability
-* The authors only ran 1 chain all MCMC
+* Without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability. 
