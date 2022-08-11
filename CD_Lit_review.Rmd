@@ -65,8 +65,10 @@ rstan_options(auto_write = TRUE)
 
 #### Summary 
 
-The authors propose a new model that models partially-observed occupancy state with information from both binary and count detections; a subset of automatically labeled recordings are manually vetted and modeled using a hypergeometric distribution. 
+The authors propose framework that models partially-observed occupancy states with information from both binary and count detections; a subset of automatically labeled recordings are manually vetted and modeled using a hypergeometric distribution. 
 The authors demonstrate this model's properties through simulation and compare the full model against two reduced models that use either solely binary detection information or solely count detection information. 
+The authors find that the general model performed better than either reduced model and that the reduced binary detection/non-detection model performed worst of the three considered in simulations. 
+Applying the general model to tree frog datasets where all calls were evaluated to be either true or false positives, the authors found that the general model was sensitive to outlier sites but was able to provide fairly accurate and precise estimates for occupancy probabilities when a greater proportion (12.5% and 5% (after outlier removal) for the two datasets respectively) of calls were evaluated as true- or false-positive detections. 
 
 
 #### Model specification 
