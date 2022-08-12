@@ -449,7 +449,25 @@ In their case study, the authors found that, in contrast with the simulations, m
 
 
 
-In the process model, let $i$ denote species, $j$ index site and $t$ denote year. The process model is 
+In the process model, let $i$ denote species, $j$ index site and $t$ denote year. In the replicated observation model, let $r = 1,2, \dots, R$ denote a subset of the J sites and let $k = 1,2,\dots,K$ denote the 'replicate' number of an observation at site $r.$ In the unreplicated observation model, let $m$ denote the subset of all $J$ sites that do not receive a replicate observation. Note that the set of sites that receive unreplicated observations and the set of sites that do receive replicate observations need not be mutually exclusive since the data sources are not the same that feed each. Then let 
+
+* $z$ denote the partially observed occupancy state of a site and species
+* $\psi$ denote the probability of occupancy by a species at a site. 
+* $X_{jt}$ be standardized covariates for site $j$ at time $t$. 
+* $\boldsymbol{\beta}_i$ be regression coefficients associated with each covariate contained in $X.$
+* $\phi_i$ denote a (random) species-specific adjustment to the community level mean probability on the logit scale 
+* $\mu$ and $\sigma^2$ denote the community-level mean and variance for occupancy probabilities on the logit scale. 
+* $y$ be the binary detection/non-detection data for a replicated observation site and species
+* $p$ be the detection probability at a replicated observation site. 
+* $W$ denote a matrix of covariates that pertain to a replicated observation $k$ at site $r$ during time $t$. 
+* $\boldsymbol{\alpha}$ denote the regression coefficients that are associated with $W$ on the logit scale. 
+* $v$ denote the binary detection/nondetection data observed at unreplicated site $m.$
+* $\pi$ denote the probability of detection species $i$ at site $m$ during time $t.$
+* $\boldsymbol{\gamma}$ denote a vector of regression coefficients for covariates $S$ on site $m$ during time $t.$ 
+
+Let
+
+The process/state model is 
 
 \[
 z_{ijt} \sim Bernoulli(\psi_{ijt})\\
@@ -458,15 +476,14 @@ logit(\psi_{ijt}) = \beta_{0_{it}}  + X_{jt}\boldsymbol{\beta_i} + \phi_iz_{ij(t
 \beta_{0_{it}} \sim Normal(\mu_{\beta_{0_t}}, \sigma^2_{\beta_{0_t}})
 \]
 
-In the replicated observation model, let $r = 1,2, \dots, R$ denote a subset of the J sites and let $k = 1,2,\dots,K$ denote the 'replicate' number of an observation at site $r.$ 
-Then the replicated observation model is 
+The replicated observation model is 
 
 \[
 y_{irkt} \sim Bernoulli(p_{irkt}z_{ij[r]t})\\
 logit(p_{irkt}) = \alpha_{0_{it}}+ W_{rkt}\boldsymbol{\alpha_i}
 \]
 
-In the unreplicated observation model, let $m$ denote the subset of the $J$ sites that do not receive a replicate observation. Note that the set ofsites that receive unreplicated observations and the set of sites that do receive replicate observations need not be mutually exclusive since the data sources are not the same that feed each. Then the unreplicated observation process is modeled by yet another Bernoulli distribution: 
+ Then the unreplicated observation process is modeled by yet another Bernoulli distribution: 
 
 \[
 v_{imt} \sim Bernoulli(\pi_{imt} z_{ij[m]t})\\
@@ -475,4 +492,3 @@ logit(\pi_{imt}) = \gamma_{0_{it}} + \boldsymbol{S}_{mt} \gamma_i
 
 Note that while not explicitly stated, species-specific regression coefficients are modeled hierarchically in the process and observation models. 
 
-#### Notes 
