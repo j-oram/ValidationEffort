@@ -432,3 +432,47 @@ L(\psi, \theta, \boldsymbol{\mu}, \boldsymbol{\sigma}| \boldsymbol{S, \space H})
   * Across sites, the weight assigned to the species-present component of the mixture changes to $\theta\psi$ 
 
 * Without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability. 
+
+
+### [@doser22] Integrated community occupancy models: A framework to assess occurrence and biodiversity dynamics using multiple data sources 
+
+#### Summary 
+
+The authors propose integrating multiple (assumed independent) data sources into a hierarchical "integrated community occupancy model" (ICOM). 
+The hierarchical structure of this model allows inference at the site and species levels but also at the community level through estimation of the grand means ($\mu$ terms)  of the species-specific regression coefficients. 
+The authors conduct two simulation studies to assess the potential benefits of 1) integrating multiple sources of data and 2) community-level modeling. 
+The authors also applied their ICOM model to data from foliage-gleaning birds in the White Mountains of New Hampshire. 
+The authors found that integrating simulated data sources yielded lower bias and greater precision than when data sources were used individually; they also found that including community estimation hierarchically improved the estimation of species-specific parameters. 
+In their case study, the authors found that, in contrast with the simulations, models fit to fully-integrated data did not always yield the highest precision when compared with models that only used a subset of the datasets. 
+
+#### Model specification 
+
+
+
+In the process model, let $i$ denote species, $j$ index site and $t$ denote year. The process model is 
+
+\[
+z_{ijt} \sim Bernoulli(\psi_{ijt})\\
+logit(\psi_{ij1}) = \beta_{0_{it}} + X_{j1}\boldsymbol{\beta_i} \\ 
+logit(\psi_{ijt}) = \beta_{0_{it}}  + X_{jt}\boldsymbol{\beta_i} + \phi_iz_{ij(t-1)}\\
+\beta_{0_{it}} \sim Normal(\mu_{\beta_{0_t}}, \sigma^2_{\beta_{0_t}})
+\]
+
+In the replicated observation model, let $r = 1,2, \dots, R$ denote a subset of the J sites and let $k = 1,2,\dots,K$ denote the 'replicate' number of an observation at site $r.$ 
+Then the replicated observation model is 
+
+\[
+y_{irkt} \sim Bernoulli(p_{irkt}z_{ij[r]t})\\
+logit(p_{irkt}) = \alpha_{0_{it}}+ W_{rkt}\boldsymbol{\alpha_i}
+\]
+
+In the unreplicated observation model, let $m$ denote the subset of the $J$ sites that do not receive a replicate observation. Note that the set ofsites that receive unreplicated observations and the set of sites that do receive replicate observations need not be mutually exclusive since the data sources are not the same that feed each. Then the unreplicated observation process is modeled by yet another Bernoulli distribution: 
+
+\[
+v_{imt} \sim Bernoulli(\pi_{imt} z_{ij[m]t})\\
+logit(\pi_{imt}) = \gamma_{0_{it}} + \boldsymbol{S}_{mt} \gamma_i
+\]
+
+Note that while not explicitly stated, species-specific regression coefficients are modeled hierarchically in the process and observation models. 
+
+#### Notes 
