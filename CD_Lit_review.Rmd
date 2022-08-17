@@ -120,6 +120,28 @@ Z_{ik} \sim Bernoulli(\psi_{ik}) \\
 C_{ij.k'} = \sum_{k = 1}^K{C_{ijkk'}}
 \]
 
+## 2021
+
+### [@clare21] Generalized model-based solutions to false-positive error in species detection/nondetection data
+
+#### Summary 
+
+The authors seek to formulate a general model that accounts for false-positive detections and for which all existing model-based solutions to false-positive contamination are special cases. The authors' model specification is very simple, but some nuance is required to massage existing notation into the form of $\theta_{tp}$ and $\theta_{fp},$ which that authors do for three existing models in their lit review. The authors conduct a simulation study for two extensions: the RN (Royle-Nicols) and the PA (Phenological "arrival") models. The authors find that failing to account for false-positive detections led to large gains in relative bias in the RN model, even when the percent of detections that were FPs was low. The PA model performed similarly. 
+
+#### Model Specification 
+
+A generalized model-based solution turns out to be anything that contains 
+\[
+y_{ij} \sim Bernoulli(\theta_{tp}\cup \theta_{fp}) 
+\]
+in the likelihood statement. In this formulation ,
+
+$\theta_{tp}$ and $\theta_{fp}$ are the probabilities of true- and false-positive detections, respectively; $y_{ij}$ is a binary detection/nondetection from sampling occasion $j$ at site $i.$ 
+
+#### Notes 
+
+
+
 ## 2022
 
 ### [@spiers22] Estimating species misclassification with occupancy dynamics and encounter rates: A semi-supervised, individual-level approach
@@ -446,8 +468,6 @@ The authors found that integrating simulated data sources yielded lower bias and
 In their case study, the authors found that, in contrast with the simulations, models fit to fully-integrated data did not always yield the highest precision when compared with models that only used a subset of the datasets. 
 
 #### Model specification 
-
-
 
 In the process model, let $i$ denote species, $j$ index site and $t$ denote year. In the replicated observation model, let $r = 1,2, \dots, R$ denote a subset of the J sites and let $k = 1,2,\dots,K$ denote the 'replicate' number of an observation at site $r.$ In the unreplicated observation model, let $m$ denote the subset of all $J$ sites that do not receive a replicate observation. Note that the set of sites that receive unreplicated observations and the set of sites that do receive replicate observations need not be mutually exclusive since the data sources are not the same that feed each. Then let 
 
