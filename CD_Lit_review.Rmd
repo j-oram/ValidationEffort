@@ -59,6 +59,41 @@ rstan_options(auto_write = TRUE)
 
 # Annotated Bibliography 
 
+## 2017 
+
+### [@ga17] Species occupancy estimation and imperfect detection: shall surveys continue after the first detection?
+
+#### Summary 
+
+The authors compare a removal design (where sites are no longer visited after first detection of the focal species) to a standard design in an occupancy modeling framework. 
+
+#### Model Specification 
+
+Let $\psi$ denote the probability that site $i$ is occupied by the focal species, and let $p_i$ denote the probability of detecting the focal species at an occupied site $i.$ Furthermore, let 
+
+* $S$ denote the number of sites sampled
+* $S_d$ denote the number of sites where a detection occurred 
+* $K_i$ denote the number of visits to made to site $i.$ Under the removal design, this is a random variable.
+* $K_M$ denote the designed number of visits to each site
+* $d_i$ denote the number of detections at site $i$
+* $p_i^\star$ denote the cumulative probability of a detection after $K_M$ visits ($p_i^\star = 1 - (1-p_i)^{K_M}$)
+* $n_1$ denote the total number of detections
+* $n_0$ denote the number of non-detections
+
+
+Under the standard occupancy model, the likelihood is 
+
+\[
+\mathcal{L}(\boldsymbol{\psi}, \boldsymbol{p}) = \prod_{i = 1}^S \left[ \psi_i p_i^{d_i} (1-p_i)^{K_i - d_i} + I(d_i = 0)(1-\psi_i) \right].
+\]
+
+For the removal design, and assuming that $\psi$ and $[$ are constant, the likelihood can be rewritten as
+
+\[
+\mathcal{L}(\psi, p) = \psi^{S_d} p^{n_1} (1-p)^{n_0 - (S-S_d)K_M} (1 - \psi p^\star)^{S - S_d}
+\]
+
+
 ## 2018 
 
 ### [@chambert18] A new framework for analysing automated acoustic species detection data: Occupancy estimation and optimization of recordings post-processing
@@ -452,6 +487,7 @@ L(\psi, \theta, \boldsymbol{\mu}, \boldsymbol{\sigma}| \boldsymbol{S, \space H})
   * Across sites, the weight assigned to the species-present component of the mixture changes to $\theta\psi$ 
 
 * Without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability. 
+* This is likely more of an alternative to a single-season, single-species occupancy model (e.g., MacKenzie 2002) than to the count detection model. 
 
 
 ### [@doser22] Integrated community occupancy models: A framework to assess occurrence and biodiversity dynamics using multiple data sources 
