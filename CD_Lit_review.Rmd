@@ -259,23 +259,31 @@ for(iter in 1:1000){
   full_df <- bind_rows(full_df, dat)
 }
 
+nsites <- n_distinct(full_df$site)
+
 theme_set(theme_bw())
 
+set.seed(1)
+site <- sample(1:nsites, 1)
+
 full_df %>%
+  filter(site  == sample(1:nsites, 1)) %>% 
   ggplot(aes(x = `psi[2]`)) + 
   geom_density() +
-  facet_wrap(~site) + 
-  theme(axis.text.x = element_text(angle = 90))
+  labs(
+    title = expression(paste("Density of randomly generated ", psi, " values: Site ", 25 ))
+  )
 ```
   
   * $\lambda$ follows a right-skewed distribution and also tends to focus on 'nice' values. There are values up to  `r round(max(full_df$"lambda[1]"))` or so, but the bulk of the mass is between 0 and 1. 
   
 ```{r}
 full_df %>%
+  filter(site == site) %>% 
   ggplot(aes(x = `lambda[1]`)) + 
   geom_density() +
-  facet_wrap(~site) + 
-  xlim(0, 5)+
+ # facet_wrap(~site) + 
+  #xlim(0, 5)+
   theme(axis.text.x = element_text(angle = 90))
 ```
 
