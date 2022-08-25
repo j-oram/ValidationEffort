@@ -66,6 +66,12 @@ rstan_options(auto_write = TRUE)
 #### Summary 
 
 The authors compare a removal design (where sites are no longer visited after first detection of the focal species) to a standard design in an occupancy modeling framework. 
+The authors do so first by assessing relative efficiency (in terms of the ratio of RMSE for the two designs) when occupancy and detection probabilities are assumed constant. 
+Under these constraints, they find that the removal design is more efficient when the detection probability and number of visits made to a site are not small, and when conditions are optimal; if these requirements are not satisfied, the standard design performs better. 
+When assuming constant occupancy and detection probabilities, the authors use simulation to investigate the impacts of decreased survey effort, finding that the removal design is much more sensitive. 
+When occupancy and detection probabilities are heterogeneous, the authors find that analytically, bias is identical for the two designs. 
+Simulations indicate that in the presence of unmodelled detection probability heterogeneity, the standard design outperforms the  removal design when cumulative detection probability is not nearly 1. 
+If the heterogeneity *is* modelled, however, the standard design outperforms the removal design because it provides more opportunities to gather covariate information to model the heterogeneity.
 
 #### Model Specification 
 
