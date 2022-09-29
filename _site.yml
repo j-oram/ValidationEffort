@@ -1,0 +1,6 @@
+name: "lit-review"
+navbar: 
+  title: "Lit Review"
+  left: 
+    - text: "Home"
+      href: index.html
