@@ -114,13 +114,35 @@ Applying the general model to tree frog datasets where all calls were evaluated 
 
 #### Model specification 
 
+Let $i$ index site and $j$ index visit. Then assume that 
+
+* $z_i$ is the occupancy status of site $i$ 
+* $\psi_i$ is the probability that site $i$ is occupied 
+* $y_{ij}$ is the binary detection/non detection observation recorded for site $i$ and visit $j$.  
+* $p_i$ is the probability of detection at site $i$ 
+* $p_{11}$ is the probability that the focal species is detected at a site given that it is present. 
+* $p_{10}$ is the probability that a detection is recorded, given that the focal species is not present. 
+
+Then the false-positive occupancy portion of the model is written as
+
+
 \[
 z_i \sim Bernoulli(\psi_i)\\
 [y_{ij}|z_i] \sim Bernoulli(p_i)\\
 p_i = z_ip_{11} + (1-z_i)p_{10}\\
 \]
 
-For sites with at least one detection:
+For sites with at least one detection, let 
+
+* $N_i$ denote the total number of detections at site $i$. 
+* $K_i$ denote the number of true detections at site $i$. 
+* $Q_i$ denote the number of false-positive detections at site $i$ 
+* $\lambda$ be the expected number of true calls from the focal species
+* $\omega$ be the expected number of false-positives, which are attributed to some exogenous, omnibus source [as opposed to the presence of another species as in @wright20]. 
+* $0 \leq n_i \leq N_i$ denote the subset of calls recorded at site $i$ that are validated.
+* $k_i \leq n_i$ denote the number of true positive recordings from the focal species. 
+
+Then, the count detection and validation process is modeled as: 
 
 \[
 N_i \sim Poisson(\lambda * z_i + \omega)\\
@@ -131,7 +153,8 @@ k_i \sim Hypergeometric(K_i, N_i, n_i)
 
 #### Notes 
 
-
+* This is a single-species model, as opposed to the multi-species model of @wright20
+* A subset of calls are validated at a visit, in contrast with the assumption made by @wright20 and @stratton22 
 
 ## 2020
 
@@ -330,7 +353,7 @@ c_{ij}^B \sim Poisson(N_i^B\lambda^B + N_i^A\omega^A)
 
 * The parameter $\lambda^A$ used by @clement22 has two key differences with $\lambda_{A_w}$ (where the extra $w$ subscript indicates that this parameter is in the notation of @wright20): 
   * $\lambda^A$ indicates the individual level encounter rate (i.e., the expected number of calls from an individual of species A)
-  * $\lambda^A$ represents true-positive detections, so tha $N_A \lambda^A = \lambda_{A_w} * \theta_AA.$
+  * $\lambda^A$ represents true-positive detections, so tha $N_A \lambda^A = \lambda_{A_w} * \theta_{AA}.$
 
 * The above observations also highlights the additional information afforded by the count detection model: it characterizes the classifier separately from the ecological parameters. (Edit: We can obtain the classification parameters $\theta$ through combinations of $\lambda$ and $\omega$ terms.)
 
