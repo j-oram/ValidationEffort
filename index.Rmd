@@ -156,6 +156,59 @@ k_i \sim Hypergeometric(K_i, N_i, n_i)
 * This is a single-species model, as opposed to the multi-species model of @wright20
 * A subset of calls are validated at a visit, in contrast with the assumption made by @wright20 and @stratton22 
 
+### [@chambert18b] Two-species occupancy modelling accounting for species misidentification and non-detection
+
+#### Summary 
+
+The authors develop a general approach to modeling false-positive errors when those false-positive error rates for one species are dependent on the presence of another. 
+The model that they propose considers two structures in how the two species interact in patterns of occurrence and co-occurrence : general and 'dominance' based interaction. 
+
+
+#### Model specification 
+
+Let $i$ index site, and $j$ index visit. Then let 
+
+* $y_{ij}$ denote the field observation that takes on value A if only species A is observed, B if only species B is observed, AB if both are observed, and 0 if neither A nor B are recorded. 
+* $Z_{ij}$ denote the latent occupancy state. $Z_{ij}$ can take the same possible values as the field recordings: A, B, AB or 0. 
+
+For the *general* model, let 
+
+* $\psi^A_i$ and $\psi^B_i$ denote the unconditional probabilities of each species' occurrence at site $i$.  
+* $\gamma$ define the 'species interaction factor' that takes on value $1$ if there is no interaction (occurrence is independent), values $<1$ if the two species tend to avoid one another, and values $>1$ when they tend to co-occur. 
+* $\psi^{AB}_i = \psi^A_i \times \psi^B_i \times \gamma$ be the probability of occurrence
+* $\Phi = \begin{bmatrix} 1 - \psi^A - \psi^B + \psi^{AB} \\ \psi^A - \psi^{AB} \\  \psi^B - \psi^{AB} \\ \psi^{AB} \\ \end{bmatrix}$ denote the vector of probabilities of occurrence. These are the probabilities of 0, A, B, and AB, respectively. 
+
+For the *dominance interaction* model, occupancy of species A is independent of the presence or absence of the subordinate species B. Under this model, let 
+
+* $\psi^A_i$ denote the unconditional  probability that the dominant species is present at site $i$
+* $\psi^{B|a}$ be the conditional probability that species $B$ is present, given that A is absent. 
+* $\psi^{B|A}$ denote the conditional probability that species $B$ is present given that $A$ is present. To be consistent with the general model, this can be rewritten as $\psi^{B|A} = \psi^{B|a} \times \gamma$
+* $\gamma$ be the effect that the presence of species A has on the probability of presence for species B. $\gamma < 1 \implies$ negative effect, $\gamma = 1 \implies$ no effect and $\gamma >1 \implies$ a positive effect. 
+* $\Phi = \begin{bmatrix} (1 - \psi^A)(1 - \psi^{B|a})\\ \psi^A (1 - \psi^{B|A})\\ (1- \psi^A) \psi^{B|a}\\ \psi^A \psi^{B|A}\end{bmatrix}$ denote the vector of state probabilities. The entries correspond to 0, A, B, and AB, respectively. 
+
+For the observation processes in both models, let 
+
+* $p^A$ denote the probability of correctly detecting species A at a site where it is truly present.
+* $r^A$ denote the probability of correctly detecting species A at a site where both species are present.
+* $\omega^A$ denote the probability of recording a false-positive detection for species **B**, given that only species A is present, *and* other detections at the site visit have already correctly identified species A. 
+* $\omega^a$ denote the probability of recording a false-positive detection for species B, given that only species A is present and other detections at the site visit have *not* already correctly identified species A. 
+* $\Pi_z$ denote the probability vector corresponding to true occupancy state $z.$
+
+With this notation, the two-species occupancy model is 
+\[
+Z_i \sim Multinomial(\Phi)\\
+y_{ij}|z_i \sim Multinomial(\Pi_{z_i}) \\
+\]
+
+with $\Pi_{z_i}$ specified as below, depending on the true state $z_i$: 
+
+```{r}
+knitr::include_graphics("Pi.png")
+```
+
+#### Notes
+
+
 ## 2020
 
 ### [@wright20] Modelling misclassification in multi‐species acoustic data when estimating occupancy and relative activity
