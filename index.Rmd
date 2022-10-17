@@ -162,7 +162,11 @@ k_i \sim Hypergeometric(K_i, N_i, n_i)
 
 The authors develop a general approach to modeling false-positive errors when those false-positive error rates for one species are dependent on the presence of another. 
 The model that they propose considers two structures in how the two species interact in patterns of occurrence and co-occurrence : general and 'dominance' based interaction. 
-
+@chambert18b conduct a simulation study to investigate the influence of validation effort, which they call the proportion of confirmatory data (PCD). 
+In simulations, the model was able to recover parameters well (even for low PCD), but precision increased as PCD increased. 
+The authors also compared the performance of their model against the existing single-species model of Miller et al., (2011) (not included here). 
+The authors applied their model to two closely-related species of salamander where prior knowledge suggested a dominance interaction may be present. 
+In application to real data, the authors used the dynamic, multi-season model given in the appendix, but needed to reparameterize the model under the assumption that $r = p$ for both species (i.e., detection is independent of whether the other species is present) to obtain estimates and standard errors for several parameters. 
 
 #### Model specification 
 
@@ -206,8 +210,32 @@ with $\Pi_{z_i}$ specified as below, depending on the true state $z_i$:
 knitr::include_graphics("Pi.png")
 ```
 
+For confirmatory data, let $w_{ij}$ denote the state of confirmed data. 
+Then $w_{ij} \in \{0, A, B, AB\}$, with $0$ corresponding to sites where either $y_{ij} = 0$ or no individuals were selected for confirmation. 
+The PCD is given by $$PCD = \frac{\sum_i \sum_j I(w_{ij} \neq 0)}{\sum_i \sum_j I(y_{ij}\neq 0)}.$$ 
+To distinguish sites where $w_{ij} = 0$ from ones where $w_{ij} \neq 0$, the authors introduce yet another variablem, $g_{ij}$, which is just $w_{ij}$ collapsed to a binary variable. 
+Finally, they introduce the parameter $\eta^k, k\in\{A, B\}$ to be the probability that only species $k$ is confirmed at a site where both are present. 
+The probabilities associated with the confirmatory states $w_{ij}$ are given in the $\Omega$ matrix below: 
+
+```{r}
+knitr::include_graphics("Omega.png")
+```
+
+With all of this notation, the likelihood can be written as 
+
+\[
+L(\boldsymbol{\theta}| \boldsymbol{h},\boldsymbol{g})  = \prod_{i = 1}^{I}Pr(h_i|g_i, \boldsymbol{\theta}),\\
+Pr(h_i|g_i, \boldsymbol{\theta}) = \Phi \times \left[ \prod_{j = 1}^{J_i} (\Pi_{y_{ij}} \times \Omega_{w_{ij}}) \right],
+\]
+
+where $\Pi_{y_{ij}}$ and $\Omega_{w_{ij}}$ are column vectors in their respective matrices, and $\boldsymbol{\theta}$ is shorthand for all of the model parameters.  
+
+
 #### Notes
 
+* The confirmation process assumes that individuals are confirmed, so it is possible to have partial vetting at a site visit. 
+* The appendix includes a multi-season extension 
+* The model performed poorly for parameters near the boundary of the probability domain
 
 ## 2020
 
