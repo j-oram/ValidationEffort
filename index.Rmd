@@ -86,7 +86,7 @@ Let
 
 Then, the likelihood  of the "core model" may be written as 
 \[
-L = \prod_i \left[\psi_i \left(\prod_j \left(\theta_{11} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{11})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right) + (1-\psi_i) \left(\prod_j \left(\theta_{10} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{10})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right)\right],
+L = \prod_i \left[\psi_i \left(\prod_j \left(\theta_{11} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{11})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right) + \\ (1-\psi_i) \left(\prod_j \left(\theta_{10} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{10})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right)\right],
 \]
 
 where $d_{ijl}$ is the detection/non-detection of the focal species on secondary sampling occasion $l$, primary sampling occasion $j$ to site $i$. $L_{ij}$ is the number of secondary sampling occasions at site $i$ on primary sampling occasion $j$. 
