@@ -61,6 +61,81 @@ rstan_options(auto_write = TRUE)
 
 ## 2017 
 
+### [@ga17b] Dealing with false-positive and false-negative errors about species occurrence at multiple levels
+
+#### Summary 
+
+The authors develop a false-positive occupancy model that has multiple stages. 
+The motivating example is use of eDNA gathered from water and analyzed via PCR to determine the presence or absence of a species of interest. 
+At each site, the species may or may not be present, its eDNA may or may not be available for detection, and the lab equipment may or may not detect the eDNA. 
+This example assumes that multiple primary and secondary sampling occasions are used in the design (e.g., multiple water samples from multiple visits to a site). 
+After discussing identifiability in models such as these, the authors investigate which sources of auxiliary data are most useful for identifying parameters, comparing unambiguous detections (U), calibration experiments across the two stages (C1) and calibration experiments at the lower stage (detection level). 
+This auxiliary information is incorporated into the likelihood via the extended model below. 
+The authors apply their extended model to an eDNA survey of four frog species, where aural surveys were included as unambiguous detections; results indicate that combining unambiguous data with calibration data for $p_{10}$ or using both sources of calibration data were sufficient for identifying the model. 
+The authors conclude with a discussion of future applications, connections to existing models, and the advantages of using profile likelihoods to characterize uncertainty and and find multimodality in the likelihood function. 
+
+#### Model specification 
+
+Let 
+
+* $\psi$ denote occupancy of the focal species.
+* $\theta_{11}$ denote the probability that the species is "available for detection", given that it is present.
+* $\theta_{10}$ denote the probability that the species is "available for detection", given that it is *not* present. This might happen in eDNA through contamination of equipment in the field. 
+* $p_{11}$ denote the probability that the species is detected, given that it is available for detection.
+* $p_{10}$ denote the probability that the species is detected, given that it is not available for detection. 
+
+Then, the likelihood  of the "core model" may be written as 
+\[
+L = \prod_i \left[\psi_i \left(\prod_j \left(\theta_{11} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{11})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right) + (1-\psi_i) \left(\prod_j \left(\theta_{10} \prod_l^{L_{ij}} p_{11}^{d_{ijl}} (1- p_{11})^{1 - d_{ijl}} + (1-\theta_{10})  \prod_l^{L_{ij}} p_{10}^{d_{ijl}} (1- p_{10})^{1 - d_{ijl}} \right)\right)\right],
+\]
+
+where $d_{ijl}$ is the detection/non-detection of the focal species on secondary sampling occasion $l$, primary sampling occasion $j$ to site $i$. $L_{ij}$ is the number of secondary sampling occasions at site $i$ on primary sampling occasion $j$. 
+
+For the extended model, the bernoulli trials for detections within secondary sapling occassions $l$ are collapsed to binomial random variables so that $d_{ij}$ in the extended model is the sum of $d_{ij}$ values in the core model above. The extended model requires additional notation to describe the joint likelihood of both auxiliary and experimental data. Let 
+
+* $K_i$ be the number of replicates used with the unambiguous method 
+* $\delta_i$ be the number of detections from the unambiguous method
+* $r_{11}$ denote the probability of detection with the unambiguous method
+* $V^{c1}$ denote the the number of trials in the calibration experiment at the level of the primary sampling occasion. 
+* $L_{j}^{c1}$ and $d_j^{c1}$ denote the number of replicates and detections, respectively, in a "blank" water sample $j$ (i.e., in the primary sampling occasion). 
+* $L^{c2}$ and $d^{c2}$ denote the number of blanks and detections in the calibration experiment at the secondary sampling level. In the eDNA example, these are the number of blank PCRs and detections within a water sample. 
+
+With this notation, the extended model that accommodates auxiliary data has the likelihood \[
+L = \prod_i \left[\psi_i \left( \prod_j^{V_i} \left( \theta_{11} p_{11}^{d_{ij}}(1 - p_{11})^{L_{ij} - d_{ij}} + (1 - \theta_{11}) p_{10}^{d_{ij}}(1 - p_{10})^{L_{ij} - d_{ij}}
+\right) 
+\right) \{r_{11}^{\delta_i}(1 - r_{11})^{K_i - \delta_i}\} + \\ 
+(1- \psi_i) \left(
+\prod_j^{V_i} \left( \theta_{10} p_{11}^{d_{ij}}(1 - p_{11})^{L_{ij} - d_{ij}} + (1 - \theta_{10}) p_{10}^{d_{ij}}(1 - p_{10})^{L_{ij} - d_{ij}}
+\right)
+\right) \{0^{\delta_i}\}
+\right] \times \\
+\prod_{j = 1}^{V^{c1}} \left( 
+\theta_{10} p_{11}^{d_j^{c1}}(1-p_{11})^{L_j^{c1} - d_j^{c1}} + (1- \theta_{10})p_{10}^{d_j^{c1}}(1-p_{10})^{L_j^{c1} - d_j^{c1}}
+\right) \times \\
+\left[
+p_{10}^{d_j^{c2}}(1-p_{10})^{L^{c2} - d^{c2}}
+\right]
+\]
+
+A more intuitive way of writing the extended model is hierarchically: 
+
+\[
+z_i^1 \sim Bernoulli(\psi_i)\\
+z_{ij}^2 \sim Bernoulli(z_i^1 \theta_{11} + (1-z_i^1)\theta_{10})\\
+d_{ij} \sim Binomial(L_{ij}, z_{ij}^2 p_{11} + (1- z_{ij}^2) p_{10})\\
+\delta_i \sim Binomial(K_i, z_i^1 r_{11})\\
+z_j^{2, c1} \sim Bernoulli(\theta_{10})\\
+d_j^{c1} \sim Binomial (L_j^{c1}, z_j^{2,c1} p_{11} + (1 - z_j^{2,c1})p_{10})\\
+d^{c2} \sim Binomial (L^{c2}, p_{10})
+\]
+
+
+
+#### Notes 
+
+* The authors introduce the profile log-likelihood and use it for estimation. The profile likelihood is described by the authors as (for some parameter $\phi$ in the model) "the value of the likelihood function for each value of $\phi$ maximized with respect to the other parameters. 
+* This study was conducted entirely within an MLE framework, but the authors acknowledge that it is possible to identify parameters using prior knowledge in a Bayesian paradigm. 
+
 ### [@ga17] Species occupancy estimation and imperfect detection: shall surveys continue after the first detection?
 
 #### Summary 
