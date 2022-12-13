@@ -400,7 +400,7 @@ k[ijlt] \sim Categorical \left( \frac{z_{ikt}\lambda_{ikt}}{\sum_{k=1}^Kz_{ikt}\
   * This may not be intentional, but this approach introduces the assumption that the distribution for $\psi_k$ is mound-shaped, symmetric with mean/median near 0.5, regardless of site (see figures below). 
   *  The simulated values used in the following figure were generated using code from the `simulation.R` file on the authors' Zenodo page. 
   
-```{r}
+```{r eval = FALSE, include = FALSE}
 set.seed(123)
 full_df <- data.frame()
 
@@ -460,16 +460,26 @@ full_df %>%
     x = "Value", 
     y = "Density"
   )
+#ggsave("densities.png")
+```
+
+```{r}
+knitr::include_graphics("densities.png")
 ```
   
-  * $\lambda$ follows a right-skewed distribution and also tends to focus on 'nice' values. There are values up to  `r round(max(full_df$"lambda[1]"))` or so, but the bulk of the mass is between 0 and 1. 
+  * $\lambda$ follows a right-skewed distribution and also tends to focus on 'nice' values. There are values up to 60 or so, but the bulk of the mass is between 0 and 1. 
   
-```{r}
+```{r eval=FALSE, include=FALSE}
 full_df %>%
   filter(site == site) %>% 
   ggplot(aes(x = `lambda[1]`)) + 
   geom_density() + 
   xlim(0,5)
+#ggsave("lam_density.png")
+```
+
+```{r}
+knitr::include_graphics("lam_density.png")
 ```
 
   * These values for $\psi$ and $\lambda$ are not distributed throughout the parameter space, and so the authors' simulation results are conditional on having species like these. 
