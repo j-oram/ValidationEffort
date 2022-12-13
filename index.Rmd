@@ -397,7 +397,7 @@ k[ijlt] \sim Categorical \left( \frac{z_{ikt}\lambda_{ikt}}{\sum_{k=1}^Kz_{ikt}\
 #### Notes 
 
 * Simulation study used data-generating values that were randomly generated from the priors used during the case study. 
-  * This may not be intentional, but this approach introduces the assumption that the distribution for $\psi_k$ is mound-shaped, symmetric with mean/median near 0.5, regardless of site. 
+  * This may not be intentional, but this approach introduces the assumption that the distribution for $\psi_k$ is mound-shaped, symmetric with mean/median near 0.5, regardless of site (see figures below). 
   *  The simulated values used in the following figure were generated using code from the `simulation.R` file on the authors' Zenodo page. 
   
 ```{r}
@@ -446,11 +446,19 @@ set.seed(1)
 site <- sample(1:nsites, 1)
 
 full_df %>%
-  filter(site  == sample(1:nsites, 1)) %>% 
-  ggplot(aes(x = `psi[2]`)) + 
+  pivot_longer(
+    cols = starts_with(c("psi", "lambda")), 
+    names_to = "parameter", 
+    values_to = "val"
+  ) %>% 
+  filter(site  == site) %>% 
+  ggplot(aes(x = val)) + 
   geom_density() +
+  facet_wrap(~parameter, scales = "free") +
   labs(
-    title = expression(paste("Density of randomly generated ", psi, " values: Site ", 25 ))
+    title = expression(paste("Density of randomly generated ", psi, " and ", lambda, " values: Site ", 25 )), 
+    x = "Value", 
+    y = "Density"
   )
 ```
   
@@ -460,13 +468,11 @@ full_df %>%
 full_df %>%
   filter(site == site) %>% 
   ggplot(aes(x = `lambda[1]`)) + 
-  geom_density() +
- # facet_wrap(~site) + 
-  #xlim(0, 5)+
-  theme(axis.text.x = element_text(angle = 90))
+  geom_density() + 
+  xlim(0,5)
 ```
 
-  * Clearly these stochastic data-generating values are not distributed throughout the parameter space, and so the authors' simulation results may need to be taken with some caution
+  * These values for $\psi$ and $\lambda$ are not distributed throughout the parameter space, and so the authors' simulation results are conditional on having species like these. 
   
 * Focus in simulation study was on predictive performance, rather than inference of ecological parameters. 
 
@@ -484,7 +490,10 @@ That is, the estimated species identities are selected as the species that the m
 
 The authors propose a two-species false-positive N-mixture model that they claim accounts for misclassification and abundance-induced detection heterogeneity when estimating occupancy from ARU data.
 The model does not require manual verification of any recorded detections to estimate occupancy and incorporates abundance as a latent variable in both the state and detection components of the model.
-The authors simulated data under the N-mixture model with a variety of scenarios for $\mu,$ $r,$ $\lambda$ and $\omega$ parameters. The authors  then compared the performance of a) a reduced presence/absence model, b) the count detection model, and c) the N-mixture model. Simulations resulted in excellent performance (e.g., convergence, bias, RMSE, coverage) for the N-mixture model and low convergence with some bias for the count detection model. After simulations, the authors applied the model to MYCI and MYYU bat data from two sites in Colorado, finding the N-mixture model to produce more plausible estimates than either competitor model. 
+The authors simulated data under the N-mixture model with a variety of scenarios for $\mu,$ $r,$ $\lambda$ and $\omega$ parameters. 
+The authors  then compared the performance of a) a reduced presence/absence model, b) the count detection model, and c) the N-mixture model. 
+Simulations resulted in excellent performance (e.g., convergence, bias, RMSE, coverage) for the N-mixture model and low convergence with some bias for the count detection model. 
+After simulations, the authors applied the model to MYCI and MYYU bat data from two sites in Colorado, finding the N-mixture model to produce more plausible estimates than either competitor model. 
 
 #### Model specification 
 
@@ -509,11 +518,11 @@ c_{ij}^B \sim Poisson(N_i^B\lambda^B + N_i^A\omega^A)
 
 * The parameter $\lambda^A$ used by @clement22 has two key differences with $\lambda_{A_w}$ (where the extra $w$ subscript indicates that this parameter is in the notation of @wright20): 
   * $\lambda^A$ indicates the individual level encounter rate (i.e., the expected number of calls from an individual of species A)
-  * $\lambda^A$ represents true-positive detections, so tha $N_A \lambda^A = \lambda_{A_w} * \theta_{AA}.$
+  * $\lambda^A$ represents true-positive detections, so that $N_A \lambda^A = \lambda_{A_w} * \theta_{AA}.$
 
 * The above observations also highlights the additional information afforded by the count detection model: it characterizes the classifier separately from the ecological parameters. (Edit: We can obtain the classification parameters $\theta$ through combinations of $\lambda$ and $\omega$ terms.)
 
-* For some of the extensions proposed, an exogenous source of false-positives is added to the mean of the poisson likelihood: $\omega^{eA},$ for example. The authors add a constraint that we must have $\lambda^A < \omega^{eA},$ but don't elucidate as to why the false-positive rate must be greater than the true detection rate. Presumably this is for identifiability, but it isn't discussed and seems that it may not be realistic in all cases. 
+* For some of the extensions proposed, an exogenous source of false-positives is added to the mean of the poisson likelihood: $\omega^{eA},$ for example. The authors add a constraint that we must have $\lambda^A < \omega^{eA},$ but don't indicate why the false-positive rate must be greater than the true detection rate. Presumably this is for identifiability, but it isn't discussed and seems that it may not be realistic in all cases. 
 
 ### [@irvine22] Statistical assessment on determining local presence of rare bat species
 
@@ -609,16 +618,16 @@ $$Y_i|V_i = v \sim Categorical(\boldsymbol{\Omega}_v).$$
 
 #### Notes 
 
-* Philosophically, this strategy is different from the suite of models described above in that it is not concerned with whether a detection is a true or false positive, but rather simply if the species identification is correct. 
-
 * The explanation of the IPP was from [Science Direct](https://www.sciencedirect.com/topics/mathematics/inhomogeneous-poisson-process) and is included to jog my memory. 
 
 * Notation is essentially the same as the latent true species label $k[ijl]$ used by @spiers22. 
-Additionally, the rectangular confusion matrix is familiar, a la @spiers22
+Additionally, the rectangular confusion matrix is familiar, a la @spiers22.
 
 * This may not be the most useful model in the context of bat applications because it requires detection of individuals at random locations, rather than detection and classification at fixed points (i.e., where the detector gets deployed).  
 
 * Unclear whether we must have verified true state for all locations/observations or just a subset.
+
+* The authors do not explore validation effort for this model and make the assumption that community-verified identifications are error-free. 
 
 Finally, the true species is predicted as 
 
@@ -658,6 +667,7 @@ f_{i,k_i} \sim Bernoulli(z_i \theta)\\
 \]
 
 To extend the model by including random subset of validated recordings let 
+
 * $h_{i,k_i}$ denote the confirmation status of the $k_i$th file. 
   * $h_{i,k_i}= 0$ if file does not contain the focal species
   * $h_{i,k_i} = 1$ if file does contain the focal species
@@ -681,6 +691,7 @@ L(\psi, \theta, \boldsymbol{\mu}, \boldsymbol{\sigma}| \boldsymbol{S, \space H})
 
 * Without validation data, likely need the assumption $\mu_1 > \mu_0$ for identifiability. 
 * This is likely more of an alternative to a single-season, single-species occupancy model (e.g., MacKenzie 2002) than to the count detection model. 
+  * However, in their case study, the authors apply this model to multiple species, by applying it one at a time to each. It would be interesting to see how this might be extended to explicitly include the assumption that a call that does not contain the focal species does contain another. 
 
 
 ### [@doser22] Integrated community occupancy models: A framework to assess occurrence and biodiversity dynamics using multiple data sources 
